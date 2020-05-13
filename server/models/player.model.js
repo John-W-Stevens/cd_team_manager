@@ -12,7 +12,10 @@ const PlayerSchema = new mongoose.Schema({
             "Name must contain at least 3 characters"
         ]
     },
-    preferredPosition: String
+    preferredPosition: String,
+    game1Status: String,
+    game2Status: String,
+    game3Status: String
     
 }, {timestamps: true});
 
