@@ -4,6 +4,7 @@ import { navigate } from "@reach/router"
 
 const PlayerList = props => {
 
+    const { flag, setFlag } = props
     const [players, setPlayers] = useState([])
 
     useEffect( ()=> {
@@ -13,13 +14,15 @@ const PlayerList = props => {
                 setPlayers(allPlayers)
             })
             .catch(error => console.log("There was an error: ", error))
-    }, [])
+    }, [flag])
 
-    const getId = player => `${player._id}`
-
-    const onDelete = player => {
-        axios.delete(`http://localhost:8000/api/player/${getId(player)}`)
-            .then(navigate("/players/list"))
+    const onDelete = e => {
+        axios.delete(`http://localhost:8000/api/players/${e.target.value}`)
+            .then(response => {
+                console.log(response)
+                if (flag){setFlag(false)}
+                else {setFlag(true)}
+            })
             .catch(error => console.log("There was an error: ", error))
     }
 
@@ -40,7 +43,7 @@ const PlayerList = props => {
                                 <tr key={i}>
                                     <td>{player.name}</td>
                                     <td>{player.preferredPosition}</td>
-                                    <td><button onClick={ onDelete(player) } className="btn btn-danger btn-sm">Delete</button></td>
+                                    <td><button onClick={ onDelete } value={player._id} className="btn btn-danger btn-sm">Delete</button></td>
                                 </tr>
                             )
                         }

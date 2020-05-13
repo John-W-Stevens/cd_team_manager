@@ -3,8 +3,12 @@ import axios from "axios"
 import { navigate } from "@reach/router"
 
 const AddPlayerForm = props => {
+
+    const { flag, setFlag } = props
+
     const [name, setName] = useState("")
     const [preferredPosition, setPreferredPosition] = useState("")
+    const [errors, setErrors] = useState([])
 
     const onSubmit = e => {
         e.preventDefault()
@@ -12,9 +16,21 @@ const AddPlayerForm = props => {
             name: name,
             preferredPosition: preferredPosition
         })
-            .then(response => console.log(response))
-            .then(navigate("/players/list"))
-            .catch(error => console.log("There was an error: ", error))
+            .then(response => {
+                console.log(response)
+                if (flag){setFlag(false)}
+                else{setFlag(true)}
+                navigate("/players/list")
+            })
+            .catch(err =>{
+                const errorResponse = err.response.data.errors; // Get the errors from err.response.data
+                const errorArr = []; // Define a temp error array to push the messages in
+                for (const key of Object.keys(errorResponse)) { // Loop through all errors and get the messages
+                    errorArr.push(errorResponse[key].message)
+                }
+                // Set Errors
+                setErrors(errorArr);
+            })
     }
 
     return(
@@ -27,7 +43,11 @@ const AddPlayerForm = props => {
                     <div className="col-12">
                         <form onSubmit={ onSubmit }>
                             <div className="form-group">
-                                <label>Player Name:</label>
+                                <label>Player Name:&nbsp;
+                                {
+                                    errors.map((err, index) => <small key={index} style={{color:"red"}}>{err}</small>)
+                                }
+                                </label>
                                 <input onChange={e=>setName(e.target.value)} type="text" className="form-control"/>
                             </div>
                             <div className="form-group">

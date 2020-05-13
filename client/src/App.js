@@ -10,13 +10,17 @@ import AddPlayerForm from "./components/AddPlayerForm"
 
 
 function App() {
+
+  const [flag, setFlag] = useState(false)
+
+
   return (
     <div className="App container">
       <Header />
       <Router>
         <ListAddView path="/players" >
-          <PlayerList path="/list"/>
-          <AddPlayerForm path="/addplayer"/>
+          <PlayerList flag={flag} setFlag={setFlag} path="/list"/>
+          <AddPlayerForm flag={flag} setFlag={setFlag} path="/addplayer"/>
         </ListAddView>
       </Router>
     </div>
